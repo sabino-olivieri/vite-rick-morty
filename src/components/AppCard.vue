@@ -1,6 +1,6 @@
 <template>
-    <div class="ms_card mb-4 text-center">
-        <div class="ms_img-card p-3 mb-2">
+    <div class="ms_card mb-4 text-center p-3">
+        <div class="ms_img-card mb-2">
             <img class="img-fluid rounded-circle shadow" :src="character.image" alt="">
         </div>
         <div>
