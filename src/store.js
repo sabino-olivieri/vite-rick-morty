@@ -2,6 +2,7 @@ import {reactive} from 'vue';
 
 export const store = reactive ({
     arrayCharacters: [],
-    selectedStatus: "All"
+    selectedStatus: "All",
+    linkApi: "https://rickandmortyapi.com/api/character"
 
 })

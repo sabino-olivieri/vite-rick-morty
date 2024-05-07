@@ -1,7 +1,7 @@
 <template>
   <AppHeader />
   <AppSearchBar @filterStatus="filterStatus" />
-  <AppMain />
+  <AppMain @scrollBottom="nextPage" />
   <AppLoad v-if="!isLoad" />
 </template>
 
@@ -30,6 +30,10 @@ export default {
     }
   },
 
+  mounted() {
+    window.addEventListener('scroll', this.nextPage);
+  },
+
   methods: {
     getList() {
       this.isLoad = false;
@@ -37,24 +41,37 @@ export default {
         status: ""
       }
 
-      if(store.selectedStatus !== "All"){
+      if (store.selectedStatus !== "All") {
         paramObj = {
-        status: store.selectedStatus
+          status: store.selectedStatus
+        }
       }
-      }
-      
 
-      axios.get('https://rickandmortyapi.com/api/character', {
-        params : paramObj,
-      }).then((resp) => {
-      console.log(resp.data.results);
-      this.isLoad = true;
-      this.store.arrayCharacters = resp.data.results;
-    });
+      setTimeout(() => {
+        axios.get(this.store.linkApi, {
+          params: paramObj,
+        }).then((resp) => {
+
+          this.store.linkApi = resp.data.info.next;
+
+          this.isLoad = true;
+
+          this.store.arrayCharacters = this.store.arrayCharacters.concat(resp.data.results);
+        });
+      }, 1000);
     },
 
     filterStatus() {
-      this.getList();  
+      this.store.linkApi = "https://rickandmortyapi.com/api/character"
+      this.store.arrayCharacters = [];
+      this.getList();
+    },
+
+    nextPage() {
+      if (window.innerHeight + window.scrollY >= document.documentElement.offsetHeight && this.store.linkApi !== null) {
+
+        this.getList();
+      }
     }
   },
 
