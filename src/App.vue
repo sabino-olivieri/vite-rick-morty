@@ -1,11 +1,13 @@
 <template>
   <AppHeader />
-  <AppMain :arrayCharacters="arrayCharacters" />
+  <AppMain />
   <AppLoad v-if="!isLoad" />
 </template>
 
 <script>
 import axios from "axios"
+
+import { store } from "./store";
 
 import AppHeader from './components/AppHeader.vue';
 import AppMain from './components/AppMain.vue';
@@ -20,17 +22,23 @@ export default {
 
   data() {
     return {
-      arrayCharacters: [],
       isLoad: false,
+      store,
     }
   },
 
-  mounted() {
-    axios.get('https://rickandmortyapi.com/api/character').then((resp) => {
+  methods: {
+    getList() {
+      axios.get('https://rickandmortyapi.com/api/character').then((resp) => {
       console.log(resp.data.results);
       this.isLoad = true;
-      this.arrayCharacters = resp.data.results;
+      this.store.arrayCharacters = resp.data.results;
     });
+    }
+  },
+
+  created() {
+    this.getList();
   }
 
 }
